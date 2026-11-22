@@ -1,6 +1,6 @@
 # Candidate Management System
 
-A RESTful Candidate Management application built using **Java 17 and Spring Boot 4.1.2**. The application provides APIs to create, retrieve, update, delete, search, and filter candidate records.
+A RESTful Candidate Management application built using Java 17 and Spring Boot 4.1.2. The application provides APIs to create, retrieve, update, delete, search, and filter candidate records.
 
 ## Technology Stack
 
@@ -73,15 +73,15 @@ java -jar target/candidate-management-1.0.0.jar
 
 The application starts at:
 
-```text
-http://localhost:8080
-```
+`http://localhost:8080`
 
 ## Database Configuration
 
 ### H2 Database (Default)
 
 The application uses an H2 file-based database by default.
+
+Configuration in `application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:h2:file:./data/candidates;DB_CLOSE_ON_EXIT=FALSE
@@ -122,9 +122,7 @@ Ensure the MySQL connector dependency is present in `pom.xml`.
 
 Base URL:
 
-```text
-http://localhost:8080/api/candidates
-```
+`http://localhost:8080/api/candidates`
 
 All request and response payloads use JSON.
 
@@ -156,7 +154,7 @@ Retrieves candidates with pagination and sorting.
 
 Example:
 
-```text
+```http
 GET /api/candidates?page=0&size=10&sortBy=name&direction=asc
 ```
 
@@ -164,9 +162,11 @@ GET /api/candidates?page=0&size=10&sortBy=name&direction=asc
 
 **GET** `/api/candidates/{id}`
 
+Retrieves a candidate using their ID.
+
 Example:
 
-```text
+```http
 GET /api/candidates/1
 ```
 
@@ -194,66 +194,77 @@ Request body:
 
 **DELETE** `/api/candidates/{id}`
 
+Deletes an existing candidate.
+
 Example:
 
-```text
+```http
 DELETE /api/candidates/1
 ```
 
 ### 6. Search and Filter Candidates
 
-**GET** `/api/candidates/search`
+**GET** `/api/candidates`
 
-Supports keyword-based searching and multiple filters.
+The same GET endpoint supports retrieving all candidates as well as keyword-based searching and multiple filters.
 
-| Query Parameter | Description | Example |
+**Query Parameters**
+
+| Parameter | Description | Example |
 |---|---|---|
-| `keyword` | Searches candidate information using a keyword | `keyword=Java` |
-| `position` | Filters by job position | `position=Java Developer` |
-| `location` | Filters by candidate location | `location=Bangalore` |
-| `minExperience` | Minimum years of experience | `minExperience=2` |
-| `maxExperience` | Maximum years of experience | `maxExperience=6` |
-| `page` | Page number (starts from 0) | `page=0` |
-| `size` | Number of records per page | `size=10` |
-| `sortBy` | Field used for sorting | `sortBy=name` |
-| `direction` | Sorting direction (`asc` or `desc`) | `direction=asc` |
+| keyword | Searches candidate name, email, skills, and position | `keyword=Java` |
+| position | Filters by job position | `position=Java Developer` |
+| location | Filters by candidate location | `location=Bangalore` |
+| minExperience | Minimum years of experience | `minExperience=2` |
+| maxExperience | Maximum years of experience | `maxExperience=6` |
+| page | Page number (starts from 0) | `page=0` |
+| size | Number of records per page | `size=10` |
+| sortBy | Field used for sorting | `sortBy=name` |
+| direction | Sorting direction (`asc` or `desc`) | `direction=asc` |
 
-#### Search Examples
+**Supported Sorting Fields**
+
+- `name`
+- `email`
+- `experienceYears`
+- `createdAt`
+
+**Search Examples**
 
 Search by keyword:
 
-```text
-GET /api/candidates/search?keyword=Java
+```http
+GET /api/candidates?keyword=Java
 ```
 
 Filter by position:
 
-```text
-GET /api/candidates/search?position=Java Developer
+```http
+GET /api/candidates?position=Java Developer
 ```
 
 Filter by location:
 
-```text
-GET /api/candidates/search?location=Bangalore
+```http
+GET /api/candidates?location=Bangalore
 ```
 
 Filter by experience:
 
-```text
-GET /api/candidates/search?minExperience=2&maxExperience=6
+```http
+GET /api/candidates?minExperience=2&maxExperience=6
 ```
 
 Combine multiple filters:
 
-```text
-GET /api/candidates/search?keyword=Java&location=Bangalore&minExperience=2&maxExperience=6
+```http
+GET /api/candidates?keyword=Java&location=Bangalore&minExperience=2&maxExperience=6
 ```
 
 Search with pagination and sorting:
 
-```text
-GET /api/candidates/search?keyword=Java&page=0&size=5&sortBy=experienceYears&direction=desc
+```http
+GET /api/candidates?keyword=Java&page=0&size=5&sortBy=experienceYears&direction=desc
 ```
 
 Multiple filters can be combined in a single request.
@@ -265,15 +276,15 @@ Pagination is implemented using Spring Data JPA.
 - `PageRequest.of()` creates the pageable request.
 - `Pageable` passes pagination and sorting information to the repository.
 - `Page<T>` returns the requested records along with pagination metadata.
-- `JpaRepository` provides the built-in paginated `findAll()` method.
+- `JpaSpecificationExecutor` supports filtered queries with pagination.
 
 Example:
 
-```text
+```http
 GET /api/candidates?page=0&size=5&sortBy=name&direction=asc
 ```
 
-Page numbering starts from `0`.
+Page numbering starts from 0.
 
 The response includes:
 
@@ -299,13 +310,13 @@ The `GlobalExceptionHandler` handles application exceptions and returns structur
 | DuplicateEmailException | 409 Conflict | Email already exists |
 | Exception | 500 Internal Server Error | Unexpected server-side error |
 
-### Validation
+## Validation
 
 Candidate request fields are validated using Jakarta Bean Validation annotations.
 
 Invalid requests are handled centrally, and meaningful validation messages are returned to the client.
 
-### Example Error Scenarios
+**Example Error Scenarios**
 
 - Creating a candidate with an invalid email.
 - Submitting missing or blank mandatory fields.
@@ -381,6 +392,8 @@ candidate-management
 │
 ├── pom.xml
 ├── README.md
+├── AI-USAGE.md
+└── .gitignore
 ```
 
 ## Architecture
@@ -404,7 +417,7 @@ Database (H2 / MySQL)
 ```
 
 - **Controller:** Exposes REST endpoints and handles HTTP requests.
-- **Service:** Contains business logic, validation-related checks, and candidate operations.
+- **Service:** Contains business logic and candidate operations.
 - **Repository:** Handles database interactions using Spring Data JPA.
 - **Model:** Represents the candidate database entity.
 - **DTO:** Defines and validates incoming candidate request data.
