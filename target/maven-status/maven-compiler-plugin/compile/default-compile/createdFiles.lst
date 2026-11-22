@@ -1,0 +1,9 @@
+com\candidate\management\model\Candidate.class
+com\candidate\management\dto\CandidateRequest.class
+com\candidate\management\exception\DuplicateEmailException.class
+com\candidate\management\exception\CandidateNotFoundException.class
+com\candidate\management\repository\CandidateRepository.class
+com\candidate\management\service\CandidateService.class
+com\candidate\management\controller\CandidateController.class
+com\candidate\management\CandidateManagementApplication.class
+com\candidate\management\exception\GlobalExceptionHandler.class

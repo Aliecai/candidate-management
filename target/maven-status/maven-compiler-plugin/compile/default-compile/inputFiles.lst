@@ -1,0 +1,9 @@
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\CandidateManagementApplication.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\controller\CandidateController.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\dto\CandidateRequest.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\exception\CandidateNotFoundException.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\exception\DuplicateEmailException.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\exception\GlobalExceptionHandler.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\model\Candidate.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\repository\CandidateRepository.java
+C:\Users\ASUTOSH\Downloads\candidate-management\candidate-management\src\main\java\com\candidate\management\service\CandidateService.java
