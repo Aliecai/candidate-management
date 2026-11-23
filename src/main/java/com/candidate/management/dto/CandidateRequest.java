@@ -5,9 +5,9 @@ import jakarta.validation.constraints.*;
 public record CandidateRequest(
     @NotBlank @Size(max = 120)
     String name,
-    @NotBlank @Email @Size(max = 180)
+    @NotBlank @Email @Size(max = 100)
     String email,
-    @Size(max = 80)
+    @Size(max = 10)
     String phone,
     @Size(max = 120)
     String position,
@@ -15,6 +15,6 @@ public record CandidateRequest(
     String skills,
     @Min(0) @Max(60)
     Integer experienceYears,
-    @Size(max = 80)
+    @Size(max = 100)
     String location
 ) {}
