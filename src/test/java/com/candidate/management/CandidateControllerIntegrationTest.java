@@ -1,8 +1,8 @@
-
 package com.candidate.management;
 
 import com.candidate.management.dto.CandidateRequest;
 import tools.jackson.databind.json.JsonMapper;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,7 +55,17 @@ class CandidateControllerIntegrationTest {
                         .param("keyword", "sam")
                         .param("location", "Pune"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalElements").value(1));
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1))
+                .andExpect(jsonPath("$.size").value(20))
+                .andExpect(jsonPath("$.number").value(0))
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("Sam Candidate"))
+                .andExpect(jsonPath("$.pageable").doesNotExist())
+                .andExpect(jsonPath("$.sort").doesNotExist())
+                .andExpect(jsonPath("$.first").doesNotExist())
+                .andExpect(jsonPath("$.last").doesNotExist())
+                .andExpect(jsonPath("$.empty").doesNotExist());
 
         CandidateRequest updated = new CandidateRequest(
                 "Sam Updated",
