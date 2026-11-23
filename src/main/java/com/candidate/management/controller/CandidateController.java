@@ -1,3 +1,4 @@
+
 package com.candidate.management.controller;
 
 import com.candidate.management.dto.CandidateRequest;
@@ -15,10 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/candidates")
 @Validated
 public class CandidateController {
-    private final CandidateService service;
-    public CandidateController(CandidateService service) { this.service = service; }
 
-    @PostMapping
+    private final CandidateService service;
+
+    public CandidateController(CandidateService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public Candidate create(@Valid @RequestBody CandidateRequest request) {
         return service.create(request);
@@ -29,35 +34,51 @@ public class CandidateController {
         return service.getById(id);
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public Page<Candidate> search(
-        @RequestParam(required = false) String keyword,
-        @RequestParam(required = false) String position,
-        @RequestParam(required = false) String location,
-        @RequestParam(required = false) @Min(0) @Max(60) Integer minExperience,
-        @RequestParam(required = false) @Min(0) @Max(60) Integer maxExperience,
-        @RequestParam(defaultValue = "0") @Min(0) int page,
-        @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size,
-        @RequestParam(defaultValue = "name") String sortBy,
-        @RequestParam(defaultValue = "asc") String direction
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) @Min(0) @Max(60) Integer minExperience,
+            @RequestParam(required = false) @Min(0) @Max(60) Integer maxExperience,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
     ) {
-        if (minExperience != null && maxExperience != null && minExperience > maxExperience)
-            throw new IllegalArgumentException("minExperience must be less than or equal to maxExperience");
+        if (minExperience != null && maxExperience != null
+                && minExperience > maxExperience) {
+            throw new IllegalArgumentException(
+                    "minExperience must be less than or equal to maxExperience");
+        }
 
-        if (!java.util.Set.of("name", "email", "experienceYears", "createdAt").contains(sortBy))
+        if (!java.util.Set.of("name", "email", "experienceYears", "createdAt")
+                .contains(sortBy)) {
             throw new IllegalArgumentException("Unsupported sortBy field");
+        }
 
-        Sort sort = "desc".equalsIgnoreCase(direction) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        return service.search(keyword, position, location, minExperience, maxExperience,
-            PageRequest.of(page, size, sort));
+        Sort sort = "desc".equalsIgnoreCase(direction)
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        return service.search(
+                keyword,
+                position,
+                location,
+                minExperience,
+                maxExperience,
+                PageRequest.of(page, size, sort)
+        );
     }
 
-    @PutMapping("/{id}")
-    public Candidate update(@PathVariable Long id, @Valid @RequestBody CandidateRequest request) {
+    @PutMapping("/update/{id}")
+    public Candidate update(
+            @PathVariable Long id,
+            @Valid @RequestBody CandidateRequest request) {
         return service.update(id, request);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);

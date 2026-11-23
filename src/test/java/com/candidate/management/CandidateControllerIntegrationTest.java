@@ -36,7 +36,7 @@ class CandidateControllerIntegrationTest {
                 "Pune"
         );
 
-        String response = mvc.perform(post("/api/candidates")
+        String response = mvc.perform(post("/api/candidates/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(body)))
                 .andExpect(status().isCreated())
@@ -47,19 +47,16 @@ class CandidateControllerIntegrationTest {
 
         long id = mapper.readTree(response).get("id").asLong();
 
-        // Read candidate
         mvc.perform(get("/api/candidates/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("sam@example.com"));
 
-        // Search candidates
-        mvc.perform(get("/api/candidates")
+        mvc.perform(get("/api/candidates/search")
                         .param("keyword", "sam")
                         .param("location", "Pune"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalElements").value(1));
 
-        // Update candidate
         CandidateRequest updated = new CandidateRequest(
                 "Sam Updated",
                 "sam@example.com",
@@ -70,17 +67,15 @@ class CandidateControllerIntegrationTest {
                 "Pune"
         );
 
-        mvc.perform(put("/api/candidates/{id}", id)
+        mvc.perform(put("/api/candidates/update/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(updated)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Sam Updated"));
 
-        // Delete candidate
-        mvc.perform(delete("/api/candidates/{id}", id))
+        mvc.perform(delete("/api/candidates/delete/{id}", id))
                 .andExpect(status().isNoContent());
 
-        // Verify candidate no longer exists
         mvc.perform(get("/api/candidates/{id}", id))
                 .andExpect(status().isNotFound());
     }
@@ -98,7 +93,7 @@ class CandidateControllerIntegrationTest {
                 null
         );
 
-        mvc.perform(post("/api/candidates")
+        mvc.perform(post("/api/candidates/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(invalid)))
                 .andExpect(status().isBadRequest())

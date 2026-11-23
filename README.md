@@ -73,7 +73,9 @@ java -jar target/candidate-management-1.0.0.jar
 
 The application starts at:
 
-`http://localhost:8080`
+```text
+http://localhost:8080
+```
 
 ## Database Configuration
 
@@ -122,13 +124,23 @@ Ensure the MySQL connector dependency is present in `pom.xml`.
 
 Base URL:
 
-`http://localhost:8080/api/candidates`
+```text
+http://localhost:8080/api/candidates
+```
 
 All request and response payloads use JSON.
 
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/candidates/create` | Create a new candidate |
+| GET | `/api/candidates/{id}` | Retrieve a candidate by ID |
+| GET | `/api/candidates/search` | Retrieve, search, and filter candidates |
+| PUT | `/api/candidates/update/{id}` | Update an existing candidate |
+| DELETE | `/api/candidates/delete/{id}` | Delete a candidate |
+
 ### 1. Create Candidate
 
-**POST** `/api/candidates`
+**POST** `/api/candidates/create`
 
 Creates a new candidate.
 
@@ -146,19 +158,7 @@ Request body:
 }
 ```
 
-### 2. Get All Candidates
-
-**GET** `/api/candidates`
-
-Retrieves candidates with pagination and sorting.
-
-Example:
-
-```http
-GET /api/candidates?page=0&size=10&sortBy=name&direction=asc
-```
-
-### 3. Get Candidate By ID
+### 2. Get Candidate By ID
 
 **GET** `/api/candidates/{id}`
 
@@ -170,9 +170,9 @@ Example:
 GET /api/candidates/1
 ```
 
-### 4. Update Candidate
+### 3. Update Candidate
 
-**PUT** `/api/candidates/{id}`
+**PUT** `/api/candidates/update/{id}`
 
 Updates an existing candidate.
 
@@ -190,25 +190,27 @@ Request body:
 }
 ```
 
-### 5. Delete Candidate
+### 4. Delete Candidate
 
-**DELETE** `/api/candidates/{id}`
+**DELETE** `/api/candidates/delete/{id}`
 
 Deletes an existing candidate.
 
 Example:
 
 ```http
-DELETE /api/candidates/1
+DELETE /api/candidates/delete/1
 ```
 
-### 6. Search and Filter Candidates
+Returns HTTP `204 No Content` on successful deletion.
 
-**GET** `/api/candidates`
+### 5. Search and Filter Candidates
 
-The same GET endpoint supports retrieving all candidates as well as keyword-based searching and multiple filters.
+**GET** `/api/candidates/search`
 
-**Query Parameters**
+Retrieves candidates with optional keyword searching, filters, pagination, and sorting.
+
+#### Query Parameters
 
 | Parameter | Description | Example |
 |---|---|---|
@@ -222,49 +224,49 @@ The same GET endpoint supports retrieving all candidates as well as keyword-base
 | sortBy | Field used for sorting | `sortBy=name` |
 | direction | Sorting direction (`asc` or `desc`) | `direction=asc` |
 
-**Supported Sorting Fields**
+#### Supported Sorting Fields
 
 - `name`
 - `email`
 - `experienceYears`
 - `createdAt`
 
-**Search Examples**
+#### Search Examples
 
 Search by keyword:
 
 ```http
-GET /api/candidates?keyword=Java
+GET /api/candidates/search?keyword=Java
 ```
 
 Filter by position:
 
 ```http
-GET /api/candidates?position=Java Developer
+GET /api/candidates/search?position=Java Developer
 ```
 
 Filter by location:
 
 ```http
-GET /api/candidates?location=Bangalore
+GET /api/candidates/search?location=Bangalore
 ```
 
 Filter by experience:
 
 ```http
-GET /api/candidates?minExperience=2&maxExperience=6
+GET /api/candidates/search?minExperience=2&maxExperience=6
 ```
 
 Combine multiple filters:
 
 ```http
-GET /api/candidates?keyword=Java&location=Bangalore&minExperience=2&maxExperience=6
+GET /api/candidates/search?keyword=Java&location=Bangalore&minExperience=2&maxExperience=6
 ```
 
 Search with pagination and sorting:
 
 ```http
-GET /api/candidates?keyword=Java&page=0&size=5&sortBy=experienceYears&direction=desc
+GET /api/candidates/search?keyword=Java&page=0&size=5&sortBy=experienceYears&direction=desc
 ```
 
 Multiple filters can be combined in a single request.
@@ -281,7 +283,7 @@ Pagination is implemented using Spring Data JPA.
 Example:
 
 ```http
-GET /api/candidates?page=0&size=5&sortBy=name&direction=asc
+GET /api/candidates/search?page=0&size=5&sortBy=name&direction=asc
 ```
 
 Page numbering starts from 0.
@@ -316,7 +318,7 @@ Candidate request fields are validated using Jakarta Bean Validation annotations
 
 Invalid requests are handled centrally, and meaningful validation messages are returned to the client.
 
-**Example Error Scenarios**
+### Example Error Scenarios
 
 - Creating a candidate with an invalid email.
 - Submitting missing or blank mandatory fields.
