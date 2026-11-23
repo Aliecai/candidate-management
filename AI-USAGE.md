@@ -16,7 +16,7 @@ AI assistance was used selectively for the following activities:
 
 3. Testing
 
-   Used AI to get suggestions for unit and integration test cases.
+   Used AI to get suggestions for unit test cases.
    Reviewed and modified the suggested test cases according to the application implementation.
 
 4. Logging and Exception Handling
